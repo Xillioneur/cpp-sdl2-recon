@@ -8,6 +8,7 @@ int main(int argc, char** argv) {
     srand((unsigned int)time(NULL));
     {
         Game game;
+        game.loop();
     }
     SDL_Quit();
     return 0;

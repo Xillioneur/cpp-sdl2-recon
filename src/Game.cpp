@@ -10,3 +10,11 @@ Game::~Game() {
     SDL_DestroyRenderer(ren);
     SDL_DestroyWindow(win);
 }
+
+void Game::loop() { 
+    while (running) { 
+        Uint32 st = SDL_GetTicks(); 
+        Uint32 t = SDL_GetTicks() - st;
+        if (t < FRAME_DELAY) SDL_Delay((Uint32)FRAME_DELAY - t);
+    }
+}

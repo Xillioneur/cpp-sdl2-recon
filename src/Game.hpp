@@ -12,6 +12,8 @@ public:
 
     Game();
     ~Game();
+        
+    void loop();
 };
 
 #endif
