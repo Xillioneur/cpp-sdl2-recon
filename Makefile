@@ -2,7 +2,8 @@ CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -Og -I. -I/opt/local/include
 LDFLAGS = -L/opt/local/lib -lSDL2 -lSDL2_ttf
 
-SRC = main.cpp
+SRC = main.cpp \
+	  src/Game.cpp
 
 OBJ = $(SRC:.cpp=.o)
 TARGET = shadowrecon
