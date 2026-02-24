@@ -12,7 +12,8 @@ public:
 
     Game();
     ~Game();
-        
+    void render();
+
     void loop();
 };
 
