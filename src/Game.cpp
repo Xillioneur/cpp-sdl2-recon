@@ -11,6 +11,10 @@ Game::~Game() {
     SDL_DestroyWindow(win);
 }
 
+void Game::handleInput() {
+    input.update();
+}
+
 void Game::render() {
     SDL_SetRenderDrawColor(ren, COL_BG.r, COL_BG.g, COL_BG.b, 255);
     SDL_RenderClear(ren);
@@ -20,6 +24,7 @@ void Game::render() {
 void Game::loop() { 
     while (running) { 
         Uint32 st = SDL_GetTicks(); 
+        handleInput();
         render();
         Uint32 t = SDL_GetTicks() - st;
         if (t < FRAME_DELAY) SDL_Delay((Uint32)FRAME_DELAY - t);
