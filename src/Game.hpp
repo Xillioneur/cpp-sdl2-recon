@@ -3,11 +3,13 @@
 
 #include <SDL2/SDL.h>
 #include "core/Constants.hpp"
+#include "core/Enums.hpp"
 #include "engine/InputHandler.hpp"
 
 class Game {
 public:
     bool running = true;
+    GameState state = GameState::MENU;
     SDL_Window* win = nullptr;
     SDL_Renderer* ren = nullptr;
 

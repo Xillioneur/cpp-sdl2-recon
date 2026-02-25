@@ -18,6 +18,23 @@ void Game::handleInput() {
 void Game::render() {
     SDL_SetRenderDrawColor(ren, COL_BG.r, COL_BG.g, COL_BG.b, 255);
     SDL_RenderClear(ren);
+
+    if (state == GameState::MENU) {
+        SDL_SetRenderDrawColor(ren, 15, 20, 25, 255);
+        for (int i = 0; i < SCREEN_WIDTH; i += 40) SDL_RenderDrawLine(ren, i, 0, i, SCREEN_HEIGHT);
+        for (int i = 0; i < SCREEN_HEIGHT; i += 40) SDL_RenderDrawLine(ren, 0, i, SCREEN_WIDTH, i);
+        // Intersections
+        SDL_SetRenderDrawColor(ren, 30, 40, 50, 255);
+        for (int x = 0; x < SCREEN_WIDTH; x += 40) {
+            for (int y = 0; y < SCREEN_HEIGHT; y += 40) {
+                SDL_Rect dot = { x - 1, y - 1, 3, 3 };
+                SDL_RenderFillRect(ren, &dot);
+            }
+        }
+    }
+
+    // TODO: Render hud
+
     SDL_RenderPresent(ren);
 }
 
