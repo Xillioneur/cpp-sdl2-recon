@@ -21,6 +21,7 @@ void HUD::renderMenu(SDL_Renderer* ren, TTF_Font* font, TTF_Font* fontL) {
 
 void HUD::renderText(SDL_Renderer* ren, const std::string& t, int x, int y, TTF_Font* f, SDL_Color c) {
     if (!f || t.empty()) return;
+    
     // Bloom shadow
     SDL_Color bloom = c; bloom.a = 60;
     SDL_Surface* bs = TTF_RenderText_Blended(f, t.c_str(), bloom);
