@@ -3,6 +3,7 @@ CXXFLAGS = -std=c++17 -Wall -Wextra -Og -I. -I/opt/local/include
 LDFLAGS = -L/opt/local/lib -lSDL2 -lSDL2_ttf
 
 SRC = main.cpp \
+	  src/ui/HUD.cpp \
 	  src/Game.cpp
 
 OBJ = $(SRC:.cpp=.o)

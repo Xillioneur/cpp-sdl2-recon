@@ -2,13 +2,30 @@
 #include <iostream>
 
 Game::Game() {
+    TTF_Init();
     win = SDL_CreateWindow("Recon", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    font = TTF_OpenFont("assets/OpenSans-Regular.ttf", 18); 
+    if (!font) {
+        std::cerr << "Failed to load font: assets/OpenSans-Regular.ttf! SDL_ttf Error: " << TTF_GetError() << std::endl;
+        running = false;
+        return;
+    }
+    fontL = TTF_OpenFont("assets/OpenSans-Regular.ttf", 52);
+    if (!fontL) {
+        std::cerr << "Failed to load large font: assets/OpenSans-Regular.ttf! SDL_ttf Error: " << TTF_GetError() << std::endl;
+        running = false;
+        return;
+    }
 }
 
 Game::~Game() {
+    // TODO: Code cleanup method.
+    if(font) TTF_CloseFont(font);
+    if(fontL) TTF_CloseFont(fontL);
     SDL_DestroyRenderer(ren);
     SDL_DestroyWindow(win);
+    TTF_Quit();
 }
 
 void Game::handleInput() {
@@ -33,7 +50,9 @@ void Game::render() {
         }
     }
 
-    // TODO: Render hud
+    if (state == GameState::MENU) {
+        hud.renderMenu(ren, font, fontL);
+    }
 
     SDL_RenderPresent(ren);
 }
