@@ -5,6 +5,7 @@
 #include <SDL2/SDL_ttf.h>
 #include "core/Constants.hpp"
 #include "core/Enums.hpp"
+#include "core/Vec2.hpp"
 #include "engine/InputHandler.hpp"
 #include "ui/HUD.hpp"
 
@@ -19,8 +20,11 @@ public:
     InputHandler input;
     HUD hud;
 
+    Vec2 cam = {0, 0};
+
     Game();
     ~Game();
+    void init();
     void handleInput();
     void render();
 

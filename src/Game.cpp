@@ -1,5 +1,6 @@
 #include "Game.hpp"
 #include <iostream>
+#include <queue>
 
 Game::Game() {
     TTF_Init();
@@ -28,8 +29,19 @@ Game::~Game() {
     TTF_Quit();
 }
 
+void Game::init() {
+    state = GameState::PLAYING;
+}
+
 void Game::handleInput() {
     input.update();
+    if (input.quit) running = false;
+    if (input.isPressed(SDL_SCANCODE_RETURN)) {
+        if (state != GameState::PLAYING) {
+            // TODO: Play sound.
+            init();
+        }
+    }
 }
 
 void Game::render() {
@@ -52,6 +64,13 @@ void Game::render() {
 
     if (state == GameState::MENU) {
         hud.renderMenu(ren, font, fontL);
+    } else if (state == GameState::PLAYING) {
+        int sx = std::max(0, (int)(cam.x / TILE_SIZE)), sy = std::max(0, (int)(cam.y / TILE_SIZE)); 
+        int ex = std::min(MAP_WIDTH, (int)((cam.x + SCREEN_WIDTH) / TILE_SIZE) + 1), ey = std::min(MAP_HEIGHT, (int)((cam.y + SCREEN_HEIGHT) / TILE_SIZE) + 1);
+        for (int y = sy; y < ey; ++y) for (int x = sx; x < ex; ++x) {
+            SDL_Rect r = {(int)(x * TILE_SIZE - cam.x), (int)(y * TILE_SIZE - cam.y), TILE_SIZE, TILE_SIZE};
+            // Map rendering logic placeholder
+        }
     }
 
     SDL_RenderPresent(ren);
