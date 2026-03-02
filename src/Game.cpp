@@ -30,12 +30,27 @@ Game::~Game() {
 }
 
 void Game::init() {
+    // Todo: Code the cleanup method.
+    generateLevel();
     state = GameState::PLAYING;
+}
+
+void Game::generateLevel() {
+    bool connected = false;
+    while (!connected) {
+        map.assign(MAP_HEIGHT, std::vector<Tile>(MAP_WIDTH));
+        for (int y = 0; y < MAP_HEIGHT; ++y) {
+            for (int x = 0; x < MAP_WIDTH; ++x) {
+                map[y][x].type == WALL;
+                map[y][x].rect = {(float)x * TILE_SIZE, (float)y * TILE_SIZE, (float)TILE_SIZE, (float)TILE_SIZE};
+            }
+        }
+        connected = true;
+    }
 }
 
 void Game::handleInput() {
     input.update();
-    if (input.quit) running = false;
     if (input.isPressed(SDL_SCANCODE_RETURN)) {
         if (state != GameState::PLAYING) {
             // TODO: Play sound.
@@ -69,7 +84,17 @@ void Game::render() {
         int ex = std::min(MAP_WIDTH, (int)((cam.x + SCREEN_WIDTH) / TILE_SIZE) + 1), ey = std::min(MAP_HEIGHT, (int)((cam.y + SCREEN_HEIGHT) / TILE_SIZE) + 1);
         for (int y = sy; y < ey; ++y) for (int x = sx; x < ex; ++x) {
             SDL_Rect r = {(int)(x * TILE_SIZE - cam.x), (int)(y * TILE_SIZE - cam.y), TILE_SIZE, TILE_SIZE};
-            // Map rendering logic placeholder
+            if (map[y][x].type == WALL) SDL_SetRenderDrawColor(ren, COL_WALL.r, COL_WALL.g, COL_WALL.b, 255);
+            else if (map[y][x].type == FLOOR) SDL_SetRenderDrawColor(ren, COL_FLOOR.r, COL_FLOOR.g, COL_FLOOR.b, 255);
+            else {
+                Uint8 flicker = (Uint8)(100 + std::sin(SDL_GetTicks() * 0.02f) * 50);
+                SDL_SetRenderDrawColor(ren, flicker, flicker, 0, 255);
+            }
+            SDL_RenderFillRect(ren, &r);
+            if (map[y][x].type == FLOOR) { 
+                SDL_SetRenderDrawColor(ren, 50, 50, 100, 255);
+                SDL_RenderDrawRect(ren, &r);
+            }
         }
     }
 
