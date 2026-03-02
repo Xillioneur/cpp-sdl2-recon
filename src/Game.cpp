@@ -45,6 +45,25 @@ void Game::generateLevel() {
                 map[y][x].rect = {(float)x * TILE_SIZE, (float)y * TILE_SIZE, (float)TILE_SIZE, (float)TILE_SIZE};
             }
         }
+        std::vector<Rect> rooms;
+        for (int i = 0; i < 15; ++i) {
+            int w = 6 + rand() % 6, h = 6 + rand() % 6, x = 1 + rand() % (MAP_WIDTH - w - 1), y = 1 + rand() % (MAP_HEIGHT - h - 1);
+            Rect r {(float)x, (float)y, (float)w, (float)h};
+            bool ok = true;
+            for (const auto& ex : rooms) if (r.intersects({ex.x - 1, ex.y - 1, ex.w + 2, ex.h + 2})) {
+                ok = false; 
+                break; 
+            }
+            if (ok) {
+                rooms.push_back(r);
+                for (int ry = y; ry < y + h; ++ry) for (int rx = (int)x; rx < (int)x + w; ++rx) map[ry][rx].type = FLOOR;
+            }
+        }
+        for (size_t i = 1; i < rooms.size(); ++i) {
+            Vec2 p1 = rooms[i - 1].center(), p2 = rooms[i].center();
+            int xDir = (p2.x > p1.x) ? 1 : -1; for (int x = (int)p1.x; x != (int)p2.x; x += xDir) map[(int)p1.y][x].type = FLOOR;
+            int yDir = (p2.y > p1.y) ? 1 : -1; for (int y = (int)p1.y)
+        }
         connected = true;
     }
 }
