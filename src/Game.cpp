@@ -82,6 +82,15 @@ void Game::generateLevel() {
             }
         }
         connected = true;
+        for (int y = 0; y < MAP_HEIGHT; ++y) for (int x = 0; x < MAP_WIDTH; ++x) if (map[y][x].type == FLOOR && !reachable[y][x]) connected  = false;
+
+        if (connected) {
+            for (int y = 0; y < MAP_HEIGHT; ++y) {
+                for (int x = 0; x < MAP_WIDTH; ++x) {
+                    if (map[y][x].type == FLOOR && rand() % 100 < 2) map[y][x].type = HAZARD_TILE;
+                }
+            }
+        }
     }
 }
 
