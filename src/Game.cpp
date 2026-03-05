@@ -62,7 +62,24 @@ void Game::generateLevel() {
         for (size_t i = 1; i < rooms.size(); ++i) {
             Vec2 p1 = rooms[i - 1].center(), p2 = rooms[i].center();
             int xDir = (p2.x > p1.x) ? 1 : -1; for (int x = (int)p1.x; x != (int)p2.x; x += xDir) map[(int)p1.y][x].type = FLOOR;
-            int yDir = (p2.y > p1.y) ? 1 : -1; for (int y = (int)p1.y)
+            int yDir = (p2.y > p1.y) ? 1 : -1; for (int y = (int)p1.y; y != (int)p2.y; y += yDir) map[y][(int)p2.x].type = FLOOR;
+        }
+        if (rooms.empty()) continue;
+        std::vector<std::vector<bool>> reachable(MAP_HEIGHT, std::vector<bool>(MAP_WIDTH, false));
+        std::queue<std::pair<int, int>> q; Vec2 start = rooms[0].center();
+        q.push({(int)start.x, (int)start.y}); reachable[(int)start.y][(int)start.x] = true;
+        reachable[(int)start.y][(int)start.x] = true;
+        while (!q.empty()) {
+            auto cur = q.front();
+            q.pop();
+            int dx[] = {0, 0, 1, -1}, dy[] = {1, -1, 0, 0};
+            for (int i = 0; i < 4; ++i) {
+                int nx = cur.first + dx[i], ny = cur.second + dy[i];
+                if (nx >= 0 && nx < MAP_WIDTH && ny >= 0 && ny < MAP_HEIGHT && map[ny][nx].type == FLOOR && !reachable[ny][nx]) { 
+                    reachable[ny][nx] = true;
+                    q.push({nx, ny});
+                }
+            }
         }
         connected = true;
     }
