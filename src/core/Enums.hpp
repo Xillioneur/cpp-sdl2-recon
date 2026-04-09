@@ -5,6 +5,7 @@
 #include <SDL2/SDL.h>
 
 enum class GameState { MENU, PLAYING };
+enum class EntityType { PLAYER };
 enum TileType { WALL, FLOOR, HAZARD_TILE };
 
 struct Tile {

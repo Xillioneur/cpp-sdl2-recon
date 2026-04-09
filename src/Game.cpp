@@ -33,7 +33,9 @@ void Game::init() {
     // Todo: Code the cleanup method.
     generateLevel();
     state = GameState::PLAYING;
+    p = new Player(findSpace(24, 24));
 }
+
 
 void Game::generateLevel() {
     bool connected = false;
@@ -92,6 +94,24 @@ void Game::generateLevel() {
             }
         }
     }
+}
+
+Vec2 Game::findSpace(float w, float h) {
+    for (int i = 0; i < 2000; ++i) {
+        int x = 1 + rand() % (MAP_WIDTH - 2);
+        int y = 1 + rand() % (MAP_HEIGHT - 2);
+        if (map[y][x].type == FLOOR) {
+            Rect r = {(float)x * TILE_SIZE + 2, (float)y * TILE_SIZE + 2, w, h};
+            bool safe = true;
+            for (int sy = y - 1; sy <= y + 2; sy++) {
+                for (int sx = x - 1; sx <= x + 2; sx++) {
+                    if (sx >= 0 && sx < MAP_WIDTH && sy >= 0 && sy < MAP_HEIGHT && map[sy][sx].type == WALL && r.intersects(map[sy][sx].rect)) safe = false;
+                }
+            }
+            if (safe) return {r.x, r.y};
+        }
+    }
+    return {MAP_HEIGHT * TILE_SIZE / 2.0f, MAP_HEIGHT * TILE_SIZE / 2.0f};
 }
 
 void Game::handleInput() {

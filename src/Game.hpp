@@ -9,6 +9,7 @@
 #include "core/Vec2.hpp"
 #include "engine/InputHandler.hpp"
 #include "ui/HUD.hpp"
+#include "gameplay/Actor.hpp"
 
 class Game {
 public:
@@ -22,12 +23,15 @@ public:
     InputHandler input;
     HUD hud;
 
+    Player* p = nullptr;
+
     Vec2 cam = {0, 0};
 
     Game();
     ~Game();
     void init();
     void generateLevel();
+    Vec2 findSpace(float w = 24, float h = 24);
     void handleInput();
     void render();
 
