@@ -18,6 +18,8 @@ public:
 
     Entity(Vec2 p, float w, float h, EntityType t);
     virtual ~Entity() {}
+
+    virtual void render(SDL_Renderer* ren, const Vec2& cam);
 };
 
 #endif

@@ -151,7 +151,7 @@ void Game::render() {
             SDL_Rect r = {(int)(x * TILE_SIZE - cam.x), (int)(y * TILE_SIZE - cam.y), TILE_SIZE, TILE_SIZE};
             if (map[y][x].type == WALL) SDL_SetRenderDrawColor(ren, COL_WALL.r, COL_WALL.g, COL_WALL.b, 255);
             else if (map[y][x].type == FLOOR) SDL_SetRenderDrawColor(ren, COL_FLOOR.r, COL_FLOOR.g, COL_FLOOR.b, 255);
-            else {
+            else { // HAZARD_TILE
                 Uint8 flicker = (Uint8)(100 + std::sin(SDL_GetTicks() * 0.02f) * 50);
                 SDL_SetRenderDrawColor(ren, flicker, flicker, 0, 255);
             }
@@ -161,6 +161,8 @@ void Game::render() {
                 SDL_RenderDrawRect(ren, &r);
             }
         }
+
+        p->render(ren, cam);
     }
 
     SDL_RenderPresent(ren);
