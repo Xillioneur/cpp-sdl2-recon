@@ -32,10 +32,9 @@ Game::~Game() {
 void Game::init() {
     // Todo: Code the cleanup method.
     generateLevel();
-    state = GameState::PLAYING;
     p = new Player(findSpace(24, 24));
+    state = GameState::PLAYING;
 }
-
 
 void Game::generateLevel() {
     bool connected = false;
@@ -43,19 +42,16 @@ void Game::generateLevel() {
         map.assign(MAP_HEIGHT, std::vector<Tile>(MAP_WIDTH));
         for (int y = 0; y < MAP_HEIGHT; ++y) {
             for (int x = 0; x < MAP_WIDTH; ++x) {
-                map[y][x].type == WALL;
+                map[y][x].type = WALL;
                 map[y][x].rect = {(float)x * TILE_SIZE, (float)y * TILE_SIZE, (float)TILE_SIZE, (float)TILE_SIZE};
             }
         }
         std::vector<Rect> rooms;
         for (int i = 0; i < 15; ++i) {
             int w = 6 + rand() % 6, h = 6 + rand() % 6, x = 1 + rand() % (MAP_WIDTH - w - 1), y = 1 + rand() % (MAP_HEIGHT - h - 1);
-            Rect r {(float)x, (float)y, (float)w, (float)h};
+            Rect r = {(float)x, (float)y, (float)w, (float)h};
             bool ok = true;
-            for (const auto& ex : rooms) if (r.intersects({ex.x - 1, ex.y - 1, ex.w + 2, ex.h + 2})) {
-                ok = false; 
-                break; 
-            }
+            for (const auto& ex : rooms) if (r.intersects({ex.x - 1, ex.y - 1, ex.w + 2, ex.h + 2})) { ok = false; break; }
             if (ok) {
                 rooms.push_back(r);
                 for (int ry = y; ry < y + h; ++ry) for (int rx = (int)x; rx < (int)x + w; ++rx) map[ry][rx].type = FLOOR;
@@ -68,24 +64,18 @@ void Game::generateLevel() {
         }
         if (rooms.empty()) continue;
         std::vector<std::vector<bool>> reachable(MAP_HEIGHT, std::vector<bool>(MAP_WIDTH, false));
-        std::queue<std::pair<int, int>> q; Vec2 start = rooms[0].center();
-        q.push({(int)start.x, (int)start.y}); reachable[(int)start.y][(int)start.x] = true;
-        reachable[(int)start.y][(int)start.x] = true;
+        std::queue<std::pair<int, int>> q; Vec2 start = rooms[0].center(); q.push({(int)start.x, (int)start.y}); reachable[(int)start.y][(int)start.x] = true;
         while (!q.empty()) {
-            auto cur = q.front();
-            q.pop();
+            auto cur = q.front(); q.pop();
             int dx[] = {0, 0, 1, -1}, dy[] = {1, -1, 0, 0};
             for (int i = 0; i < 4; ++i) {
                 int nx = cur.first + dx[i], ny = cur.second + dy[i];
-                if (nx >= 0 && nx < MAP_WIDTH && ny >= 0 && ny < MAP_HEIGHT && map[ny][nx].type == FLOOR && !reachable[ny][nx]) { 
-                    reachable[ny][nx] = true;
-                    q.push({nx, ny});
-                }
+                if (nx >= 0 && nx < MAP_WIDTH && ny >= 0 && ny < MAP_HEIGHT && map[ny][nx].type == FLOOR && !reachable[ny][nx]) { reachable[ny][nx] = true; q.push({nx, ny}); }
             }
         }
         connected = true;
-        for (int y = 0; y < MAP_HEIGHT; ++y) for (int x = 0; x < MAP_WIDTH; ++x) if (map[y][x].type == FLOOR && !reachable[y][x]) connected  = false;
-
+        for (int y = 0; y < MAP_HEIGHT; ++y) for (int x = 0; x < MAP_WIDTH; ++x) if (map[y][x].type == FLOOR && !reachable[y][x]) connected = false;
+        
         if (connected) {
             for (int y = 0; y < MAP_HEIGHT; ++y) {
                 for (int x = 0; x < MAP_WIDTH; ++x) {
@@ -96,8 +86,9 @@ void Game::generateLevel() {
     }
 }
 
+
 Vec2 Game::findSpace(float w, float h) {
-    for (int i = 0; i < 2000; ++i) {
+    for(int i = 0; i < 2000; ++i) {
         int x = 1 + rand() % (MAP_WIDTH - 2);
         int y = 1 + rand() % (MAP_HEIGHT - 2);
         if (map[y][x].type == FLOOR) {
@@ -111,8 +102,9 @@ Vec2 Game::findSpace(float w, float h) {
             if (safe) return {r.x, r.y};
         }
     }
-    return {MAP_HEIGHT * TILE_SIZE / 2.0f, MAP_HEIGHT * TILE_SIZE / 2.0f};
+    return {MAP_WIDTH * TILE_SIZE / 2.0f, MAP_HEIGHT * TILE_SIZE / 2.0f};
 }
+
 
 void Game::handleInput() {
     input.update();
@@ -122,6 +114,12 @@ void Game::handleInput() {
             init();
         }
     }
+}
+
+void Game::update() {
+    if (state != GameState::PLAYING) return;
+    float dt = FRAME_DELAY / 1000.0f;
+    p->update(dt, map);
 }
 
 void Game::render() {
@@ -172,6 +170,7 @@ void Game::loop() {
     while (running) { 
         Uint32 st = SDL_GetTicks(); 
         handleInput();
+        update();
         render();
         Uint32 t = SDL_GetTicks() - st;
         if (t < FRAME_DELAY) SDL_Delay((Uint32)FRAME_DELAY - t);

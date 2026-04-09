@@ -33,6 +33,7 @@ public:
     void generateLevel();
     Vec2 findSpace(float w = 24, float h = 24);
     void handleInput();
+    void update();
     void render();
 
     void loop();

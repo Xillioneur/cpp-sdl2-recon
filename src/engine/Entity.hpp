@@ -19,6 +19,8 @@ public:
     Entity(Vec2 p, float w, float h, EntityType t);
     virtual ~Entity() {}
 
+    virtual void update(float dt, const std::vector<std::vector<Tile>>& map);
+    virtual void move(Vec2 delta, const std::vector<std::vector<Tile>>& map);
     virtual void render(SDL_Renderer* ren, const Vec2& cam);
 };
 
