@@ -120,6 +120,9 @@ void Game::update() {
     if (state != GameState::PLAYING) return;
     float dt = FRAME_DELAY / 1000.0f;
     p->update(dt, map);
+    Vec2 tCam = p->bounds.center() - Vec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+    cam.x += (tCam.x - cam.x) * 6.0f * dt;
+    cam.y += (tCam.y - cam.y) * 6.0f * dt;
 }
 
 void Game::render() {
