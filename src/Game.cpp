@@ -123,6 +123,14 @@ void Game::update() {
     Vec2 tCam = p->bounds.center() - Vec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
     cam.x += (tCam.x - cam.x) * 6.0f * dt;
     cam.y += (tCam.y - cam.y) * 6.0f * dt;
+
+    // TODO: dashTimer
+    Vec2 mv = {0, 0};
+    if (input.isPressed(SDL_SCANCODE_W)) mv.y = -1;
+    if (input.isPressed(SDL_SCANCODE_S)) mv.y = 1;
+    if (input.isPressed(SDL_SCANCODE_A)) mv.x = -1;
+    if (input.isPressed(SDL_SCANCODE_D)) mv.x = 1;
+    p->vel = mv.normalized() * PLAYER_SPEED;
 }
 
 void Game::render() {

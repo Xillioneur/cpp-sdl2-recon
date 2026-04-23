@@ -7,6 +7,7 @@
 class InputHandler {
     public:
         bool keys[SDL_NUM_SCANCODES] = {false};
+        bool lastKeys[SDL_NUM_SCANCODES] = {false};
     
         void update() {
             SDL_Event e;
