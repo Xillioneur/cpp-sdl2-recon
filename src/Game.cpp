@@ -119,7 +119,7 @@ void Game::handleInput() {
 void Game::update() {
     if (state != GameState::PLAYING) return;
     float dt = FRAME_DELAY / 1000.0f;
-    p->update(dt, map);
+
     Vec2 tCam = p->bounds.center() - Vec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
     cam.x += (tCam.x - cam.x) * 6.0f * dt;
     cam.y += (tCam.y - cam.y) * 6.0f * dt;
@@ -131,6 +131,10 @@ void Game::update() {
     if (input.isPressed(SDL_SCANCODE_A)) mv.x = -1;
     if (input.isPressed(SDL_SCANCODE_D)) mv.x = 1;
     p->vel = mv.normalized() * PLAYER_SPEED;
+    Vec2 pCtr = p->bounds.center();
+    Vec2 mWorld = input.mPos + cam;
+    p->lookAngle = std::atan2(mWorld.y - pCtr.y, mWorld.x - pCtr.x);
+    p->update(dt, map);
 }
 
 void Game::render() {
