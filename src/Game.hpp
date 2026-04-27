@@ -30,6 +30,7 @@ public:
     Game();
     ~Game();
     void init();
+    void cleanup();
     void generateLevel();
     Vec2 findSpace(float w = 24, float h = 24);
     void handleInput();

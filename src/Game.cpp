@@ -21,7 +21,7 @@ Game::Game() {
 }
 
 Game::~Game() {
-    // TODO: Code cleanup method.
+    cleanup();
     if(font) TTF_CloseFont(font);
     if(fontL) TTF_CloseFont(fontL);
     SDL_DestroyRenderer(ren);
@@ -30,10 +30,14 @@ Game::~Game() {
 }
 
 void Game::init() {
-    // Todo: Code the cleanup method.
+    cleanup();
     generateLevel();
     p = new Player(findSpace(24, 24));
     state = GameState::PLAYING;
+}
+
+void Game::cleanup() {
+    if (p) delete p;
 }
 
 void Game::generateLevel() {
